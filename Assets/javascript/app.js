@@ -3,7 +3,7 @@ $('document').ready(function(){
     // Variables
 
     var basicEmotions = ['fear', 'anger', 'sadness', 'joy', 'disgust', 'surprise', 'trust', 'anticipation'];
-    var queryURL = 'https://api.giphy.com/v1/gifs/trending?api_key=dc6zaTOxFJmzC';
+    // var queryURL = 'https://api.giphy.com/v1/gifs/trending?api_key=dc6zaTOxFJmzC';
 
 
     // new div under nav bar to hold a row of buttons
@@ -35,38 +35,43 @@ $('document').ready(function(){
 
     } // End of startButtons()
 
-    function makeCard(){
-/*         
-    <div class="card" style="width: 18rem;">
-        <img class="card-img-top" src=".../100px180/?text=Image cap" alt="Card image cap">
-        <div class="card-body">
-            <p class="card-text">Rating Here</p>
-            <p class="card-text">Extra Stuff Here</p>
-        </div>
-    </div> */
-
-        /* var newCardElement = $('
-                                <div class="card" style="width: 18rem;">
-                                    <img class="card-img-top" src=".../100px180/?text=Image cap" alt="Card image cap">
-                                        <div class="card-body">
-                                            <p class="card-text">Rating Here</p>
-                                            <p class="card-text">Extra Stuff Here</p>
-                                        </div>
-                                </div>'); */
-        var newCardElement = $('<div>').addClass('card').attr('style','width: 18rem');
-        $('#nav-bar').append(newCardElement);
-    }
     // call startButtons()
     startButtons();
     //makeCard();
 
-    // call to Api using Ajax
-    $.ajax({
-        url: queryURL,
-        method: "GET"
-      }).then(function(response) {
-        console.warn("Ajax was called");  //~JG Fires when clicked or onkeyup
-        console.log(response);            // Show the object in the console
+    $(".btn-primary").on("click", function(event) {
+        console.log('primary button clicked');
         
+        event.preventDefault();
+
+        var getEmotion = $(this).data('emo'); 
+        console.log(getEmotion);
+        
+        var queryURL = 'https://api.giphy.com/v1/gifs/search?q=' + getEmotion + '&api_key=dc6zaTOxFJmzC&limit=10'; 
+
+        $.ajax({
+          url: queryURL,
+          method: "GET"
+        }).then(function(response) {
+          console.warn("Ajax was called");  
+          console.log(queryURL);
+          console.log(response);
+          
+          var results = response.data;
+
+          var newEmotionDiv = $("<div>");
+          newEmotionDiv.addClass('emotion-holder');
+          // Looping through each result item
+          for (var i = 0; i < results.length; i++) 
+          {
+            var p = $("<p>").text("Rating: " + results[i].rating);
+            var emotionImage = $("<img>");
+            emotionImage.attr("src", results[i].images.fixed_height.url);
+            newEmotionDiv.append(p);
+            newEmotionDiv.append(emotionImage);
+            $("#gifs-appear-here").prepend(newEmotionDiv);
+          }
+        });
+
       });
 });
