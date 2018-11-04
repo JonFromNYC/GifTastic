@@ -1,77 +1,56 @@
-$('document').ready(function(){
+$('document').ready(function () {
 
-    // Variables
-
+    // HOLD 8 EMOTIONS IN AN ARRAY TO BE USED FOR BUTTON TEXT
     var basicEmotions = ['fear', 'anger', 'sadness', 'joy', 'disgust', 'surprise', 'trust', 'anticipation'];
-    // var queryURL = 'https://api.giphy.com/v1/gifs/trending?api_key=dc6zaTOxFJmzC';
 
+    // MAKE A NEW DIV UNDER NAV BAR TO HOLD A ROW OF 8 BUTTONS
+    var newDiv = $('<div>');                                // NEW DIV ELEMENT
+    newDiv.addClass('button-holder');                       // ADD CLASS TO NEW DIV
+    $('#nav-bar').append(newDiv);                           // APPEND THE NEW DIV TO NAV BAR
 
-    // new div under nav bar to hold a row of buttons
-    var newDiv = $('<div>');                    // New div element
-    newDiv.addClass('button-holder');           // Add class to new Div
-    $('#nav-bar').append(newDiv);
+    startButtons();
 
-    // make initial list of buttons for each element in the basic emotions array
-    function startButtons(){
-        console.log('startButtons() called');
-        
+    // FUNCTION: make initial list of buttons for each element in the basic emotions array
+    function startButtons() {
         for (let i = 0; i < basicEmotions.length; i++) {
-            var newBtn = $('<button>');                 // New button element
-            newBtn.addClass('btn btn-sm btn-primary');  // Add class to button
-            newBtn.attr('data-emo', basicEmotions[i]);  // Add data attribute to button equal to array index
-            newBtn.text(basicEmotions[i]);              // Add text to the button equal to array index
-            newDiv.append(newBtn);                      // Append newBtn to newDiv
+            var newBtn = $('<button>');                     // New button element
+            newBtn.addClass('btn btn-sm btn-primary');      // Add class to button
+            newBtn.attr('data-emo', basicEmotions[i]);      // Add data attribute to button equal to array index
+            newBtn.text(basicEmotions[i]);                  // Add text to the button equal to array index
+            newDiv.append(newBtn);                          // Append newBtn to newDiv
         }
-
-/*      var newDiv = $('<div>');                    // New div element
-        newDiv.addClass('button-holder');           // Add class to new Div
-        var newBtn = $('<button>');                 // New button element
-        newBtn.addClass('btn btn-sm btn-primary');  // Add class to button
-        newBtn.attr('data-emo', basicEmotions[0]);  // Add data attribute to button equal to array index
-        newBtn.text(basicEmotions[0]);              // Add text to the button equal to array index
-        newDiv.append(newBtn);                      // Append newBtn to newDiv
-        $('#nav-bar').append(newDiv);               // Append new elements to #nav-bar 
-*/
-
     } // End of startButtons()
 
-    // call startButtons()
-    startButtons();
-    //makeCard();
+    // BUTTON LISTENER
+    $(".btn").on("click", function (event) {
 
-    $(".btn-primary").on("click", function(event) {
-        console.log('primary button clicked');
-        
         event.preventDefault();
 
-        var getEmotion = $(this).data('emo'); 
-        console.log(getEmotion);
-        
-        var queryURL = 'https://api.giphy.com/v1/gifs/search?q=' + getEmotion + '&api_key=dc6zaTOxFJmzC&limit=10'; 
+        var getEmotion = $(this).data('emo');
+
+        var queryURL = 'https://api.giphy.com/v1/gifs/search?q=' + getEmotion + '&api_key=dc6zaTOxFJmzC&limit=10';
 
         $.ajax({
-          url: queryURL,
-          method: "GET"
-        }).then(function(response) {
-          console.warn("Ajax was called");  
-          console.log(queryURL);
-          console.log(response);
-          
-          var results = response.data;
+            url: queryURL,
+            method: "GET"
+        }).then(function (response) {
+            console.warn("Ajax was called");
+            console.log(queryURL);
+            console.log(response);
 
-          var newEmotionDiv = $("<div>");
-          newEmotionDiv.addClass('emotion-holder');
-          // Looping through each result item
-          for (var i = 0; i < results.length; i++) 
-          {
-            var p = $("<p>").text("Rating: " + results[i].rating);
-            var emotionImage = $("<img>");
-            emotionImage.attr("src", results[i].images.fixed_height.url);
-            newEmotionDiv.append(p);
-            newEmotionDiv.append(emotionImage);
-            $("#gifs-appear-here").prepend(newEmotionDiv);
-          }
+            var results = response.data;
+
+            var newEmotionDiv = $("<div>");
+            newEmotionDiv.addClass('emotion-holder');
+            // Looping through each result item
+            for (var i = 0; i < results.length; i++) {
+                var p = $("<p>").text("Rating: " + results[i].rating);
+                var emotionImage = $("<img>");
+                emotionImage.attr("src", results[i].images.fixed_height.url);
+                newEmotionDiv.append(p);
+                newEmotionDiv.append(emotionImage);
+                $("#gifs-appear-here").prepend(newEmotionDiv);
+            }
         });
-
-      });
+    });
 });
