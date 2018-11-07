@@ -2,7 +2,8 @@ $('document').ready(function () {
 
     // HOLD 8 EMOTIONS IN AN ARRAY TO BE USED FOR BUTTON TEXT
     var basicEmotions = ['fear', 'anger', 'sadness', 'joy', 'disgust', 'surprise', 'trust', 'anticipation'];
-    var somethingNew;
+    
+    var somethingNew;                                                   // HOLDS USER INPUT AS STRING
     var newDiv = $('<div>');                                            // NEW DIV ELEMENT
 
     begin();
